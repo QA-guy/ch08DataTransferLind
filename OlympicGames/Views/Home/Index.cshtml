@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Country>
+@{
+    ViewData["Title"] = "Olympic Countries";
+    string Active(string filter, string selected)
+    {
+        return (filter.ToLower() == selected.ToLower()) ? "active" : "";
+    }
+}
+
+<div class="row">
+    <div class="col-sm-9">
+        <ul class="list-inline">
+            @foreach (Country country in Model)
+            {
+                <li class="list-inline-item">
+                    <img src="/images/@country.CountryImage" />                        
+                </li>
+            }
+
+    </div>
+</div>
