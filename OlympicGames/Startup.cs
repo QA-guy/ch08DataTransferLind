@@ -48,7 +48,7 @@ namespace OlympicGames
             {
                 endpoints.MapControllerRoute(
                    name: "custom",
-                   pattern: "{controller}/{action}/sport/{activeSport}/game/{activeGame}");
+                   pattern: "{controller=Home}/{action=Index}/sport/{activeSport}/game/{activeGame}");
 
                 endpoints.MapControllerRoute(
                     name: "default",

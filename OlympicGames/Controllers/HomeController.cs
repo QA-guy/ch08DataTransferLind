@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OlympicGames.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace OlympicGames.Controllers
 {
@@ -14,30 +15,49 @@ namespace OlympicGames.Controllers
         }
         public ViewResult Index(string activeSport = "all",string activeGame = "all")
         {
-            ViewBag.ActiveSport = activeSport;
-            ViewBag.ActiveGame = activeGame;
-
-            List<Game> games = context.Games.ToList();
-            List<Sport> sports = context.Sports.ToList();
-
-            sports.Insert(0, new Sport { SportID = "all", SportName = "ALL" });
-            games.Insert(0, new Game { GameID = "all", GName = "ALL" });
-
-            //store lists in view bag
-            ViewBag.Sports = sports;
-            ViewBag.Games = games;
+            var data = new CountryListViewModel
+            {
+                ActiveGame = activeGame,
+                ActiveSport = activeSport,
+                Games = context.Games.ToList(),
+                Sports = context.Sports.ToList()
+            };
 
             IQueryable<Country> query = context.Countries;
             if (activeGame != "all")
                 query = query.Where(
-                    t => t.Game.GameID.ToLower() == activeGame.ToLower());
+                    c => c.Game.GameID.ToLower() == activeGame.ToLower());
             if (activeSport != "all")
-                query = query.Where(
-                    t => t.Sport.SportID.ToLower() == activeSport.ToLower());
+                query = query.Where(c =>
+                   c.Sport.SportID.ToLower() == activeSport.ToLower());
+            data.Countries = query.ToList();
 
-            var countries = query.ToList();
+            return View(data);
+        }
 
-            return View(countries);
+        [HttpPost]
+        public IActionResult Details(CountryViewModel model)
+        {
+            Utility.LogCountryClick(model.Country.CountryID);
+
+            TempData["ActiveSport"] = model.ActiveSport;
+            TempData["ActiveGame"] = model.ActiveGame;
+            return RedirectToAction("Details", new { ID = model.Country.CountryID });
+        }
+
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            var model = new CountryViewModel
+            {
+                Country = context.Countries
+                    .Include(c => c.Game)
+                    .Include(c => c.Sport)
+                    .FirstOrDefault(c => c.CountryID == id),
+                ActiveSport = TempData.Peek("ActiveSport").ToString() ,
+                ActiveGame = TempData.Peek("ActiveGame").ToString() 
+            };
+            return View(model);
         }
     }
 }
