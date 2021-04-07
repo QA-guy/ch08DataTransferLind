@@ -34,7 +34,7 @@
             @foreach (Country country in Model.Countries)
             {
                 <li class="list-inline-item">
-                    <form asp-action="Details" method="post">
+                    <form asp-action="/home/Details"  method="post">
                         <button class="bg-white border-0" type="submit">
                             <img src="~/images/@country.CountryImage" alt="@country.Name"
                                  title="@country.Name | @country.Game.GName| @country.Sport.SportName" />

@@ -36,7 +36,7 @@ namespace OlympicGames.Controllers
         }
 
         [HttpPost]
-        public IActionResult Details(CountryViewModel model)
+        public RedirectToActionResult Details(CountryViewModel model)
         {
             Utility.LogCountryClick(model.Country.CountryID);
 
@@ -44,9 +44,18 @@ namespace OlympicGames.Controllers
             TempData["ActiveGame"] = model.ActiveGame;
             return RedirectToAction("Details", new { ID = model.Country.CountryID });
         }
+        [HttpPost]
+        public RedirectToActionResult Details1(object model)
+        {
+            //Utility.LogCountryClick(model.Country.CountryID);
 
+            //TempData["ActiveSport"] = model.ActiveSport;
+            //TempData["ActiveGame"] = model.ActiveGame;
+            //return RedirectToAction("Details", new { ID = model.Country.CountryID });
+            return null;
+        }
         [HttpGet]
-        public IActionResult Details(string id)
+        public ViewResult Details(string id)
         {
             var model = new CountryViewModel
             {

@@ -42,13 +42,13 @@ namespace OlympicGames
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                   name: "custom",
-                   pattern: "{controller=Home}/{action=Index}/sport/{activeSport}/game/{activeGame}");
+                //endpoints.MapControllerRoute(
+                //   name: "",
+                //   pattern: "{controller=Home}/{action=Index}/sport/{activeSport}/game/{activeGame}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
