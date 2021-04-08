@@ -15,6 +15,10 @@ namespace OlympicGames.Controllers
         }
         public ViewResult Index(string activeSport = "all",string activeGame = "all")
         {
+            var session = new OlympicSession(HttpContext.Session);
+            session.SetActiveGame(activeGame);
+            session.SetActiveSport(activeSport);
+
             var data = new CountryListViewModel
             {
                 ActiveGame = activeGame,

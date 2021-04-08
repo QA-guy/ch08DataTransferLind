@@ -20,6 +20,12 @@ namespace OlympicGames
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //page 325 configuring services to use session state
+            services.AddMemoryCache();
+            services.AddSession();
+
+            services.AddControllersWithViews().AddNewtonsoftJson();
+
             services.AddControllersWithViews();
             services.AddDbContext<CountryContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CountryContext")));
         }
@@ -42,7 +48,10 @@ namespace OlympicGames
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+
+            //Page 325, must be called before UseEndPoints()editing to chane default session state settings
+            app.UseSession();
+
 
             app.UseEndpoints(endpoints =>
             {
