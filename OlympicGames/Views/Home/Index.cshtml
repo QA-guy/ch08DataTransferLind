@@ -1,7 +1,7 @@
 ﻿@model CountryListViewModel
 @{
     ViewData["Title"] = "Olympic Countries";
-    
+
 }
 
 <div class="row">
@@ -23,7 +23,7 @@
             {
                 <a asp-action="Index"
                    asp-route-activeGame="@Model.ActiveGame"
-                   asp-route-sport="@sport.SportID"                   
+                   asp-route-activeSport="@sport.SportID"
                    class="list-group-item
                        @Model.CheckActiveSport(sport.SportID)">@sport.SportName</a>
                 }
@@ -31,24 +31,29 @@
     </div>
     <div class="col-sm-9">
         <ul class="list-inline">
-            @foreach (Country country in Model.Countries)
-            {
             <li class="list-inline-item">
-                @using (Html.BeginForm("Details", "Home",
-                   FormMethod.Post))
+                @using (Html.BeginForm("Details", "Home", FormMethod.Post))
                 {
-                    @*<form asp-action="/home/Details"  method="post">*@
-                    <button class="bg-white border-0" type="submit">
-                        <img src="~/images/@country.CountryImage" alt="@country.Name"
-                             title="@country.Name | @country.Game.GName| @country.Sport.SportName" />
-                    </button>
-                    <input type="hidden" asp-for="@country.CountryID" />
-                    <input type="hidden" asp-for="ActiveSport" />
-                    <input type="hidden" asp-for="ActiveGame" />
-                    @*</form>*@
+
+                    <div id="ItemContainer">
+                        @for (int i = 0; i < Model.Countries.Count; i++)
+                        {
+                            <button class="bg-white border-0" type="submit">
+                                <img src="~/images/@Model.Countries[i].CountryImage" alt="@Model.Countries[i].Name"
+                                     title="@Model.Countries[i].Name | @Model.Countries[i].Game.GName| @Model.Countries[i].Sport.SportName" />
+                            </button>
+
+                            @Html.HiddenFor(m => m.Countries[i].CountryID)
+                            @Html.HiddenFor(m => m.Countries[i].CountryImage)
+                            @Html.HiddenFor(m => m.Countries[i].Game)
+                            @Html.HiddenFor(m => m.Countries[i].GameID)
+                            @Html.HiddenFor(m => m.Countries[i].Name)
+                            @Html.HiddenFor(m => m.Countries[i].Sport)
+                            @Html.HiddenFor(m => m.Countries[i].SportID)
+                        }
+                    </div>
                 }
             </li>
-            }
         </ul>
     </div>
 </div>

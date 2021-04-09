@@ -19,9 +19,15 @@
                 <h4>Games: @Model.Country.Game.GName</h4>
             </li>
             <li class="list-group-item">
-                <a asp-action="Index"
-                   asp-route-activeSport="@Model.ActiveSport"
-                   asp-route-activeGame="@Model.ActiveGame">Return to Home Page</a>
+                <form asp-action="Add" method="post">
+                    <a asp-action="Index" class="btn btn-primary"
+                       asp-route-activeSport="@Model.ActiveSport"
+                       asp-route-activeGame="@Model.ActiveGame">Return to Home Page</a>
+                    <button type="submit" class="btn btn-primary">
+                        Add to Favorites
+                    </button>
+                    <input type="hidden" asp-for="Country.CountryID" />
+                </form>
             </li>
         </ul>
     </div>
