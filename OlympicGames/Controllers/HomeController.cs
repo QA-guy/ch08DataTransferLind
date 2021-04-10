@@ -57,6 +57,7 @@ namespace OlympicGames.Controllers
             TempData["ActiveSport"] = model.ActiveSport;
             TempData["ActiveGame"] = model.ActiveGame;
             return RedirectToAction("Details", new { ID = model.Country.CountryID });
+            
         }
         [HttpGet]
         public ViewResult Details(string id)
