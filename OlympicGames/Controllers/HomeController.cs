@@ -13,31 +13,49 @@ namespace OlympicGames.Controllers
         {
             context = ctx;
         }
-        public ViewResult Index(string activeSport = "all", string activeGame = "all")
+        public ViewResult Index(CountryListViewModel model)
         {
+            model.Sports = context.Sports.ToList();
+            model.Games = context.Games.ToList();
+
             //New changes-pg.339.  Updates for Chapter 9 for session states
             var session = new OlympicSession(HttpContext.Session);
-            session.SetActiveGame(activeGame);
-            session.SetActiveSport(activeSport);
+            session.SetActiveGame(model.ActiveGame);
+            session.SetActiveSport(model.ActiveSport);
 
-            var data = new CountryListViewModel
-            {
-                ActiveGame = activeGame,
-                ActiveSport = activeSport,
-                Games = context.Games.ToList(),
-                Sports = context.Sports.ToList()
-            };
+            int? count = session.GetMyCountryCount();
+            
+
+            if (count == null){
+                var cookies = new OlympicCookies(HttpContext.Request.Cookies);
+                string[] ids = cookies.GetMyCountryIds();
+
+                List<Country> mycountries = new List<Country>();
+                if (ids.Length > 0)
+                    mycountries = context.Countries.Include(c => c.Game)
+                        .Include(c => c.Sport)
+                        .Where(c => ids.Contains(c.CountryID)).ToList();
+                session.SetMyCountries(mycountries);
+            }
+
+            //var data = new CountryListViewModel
+            //{
+            //    ActiveGame = activeGame,
+            //    ActiveSport = activeSport,
+            //    Games = context.Games.ToList(),
+            //    Sports = context.Sports.ToList()
+            //};
 
             IQueryable<Country> query = context.Countries;
-            if (activeGame != "all")
+            if (model.ActiveGame != "all")
                 query = query.Where(
-                    c => c.Game.GameID.ToLower() == activeGame.ToLower());
-            if (activeSport != "all")
+                    c => c.Game.GameID.ToLower() == model.ActiveGame.ToLower());
+            if (model.ActiveSport != "all")
                 query = query.Where(c =>
-                   c.Sport.SportID.ToLower() == activeSport.ToLower());
-            data.Countries = query.ToList();
+                   c.Sport.SportID.ToLower() == model.ActiveSport.ToLower());
+            model.Countries = query.ToList();
 
-            return View(data);
+            return View(model);
         }
 
         //[HttpPost]
